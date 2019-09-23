@@ -1,0 +1,34 @@
+<script type="text/x-red" data-help-name="validate">
+	Validate a payload using the <a href="https://validatejs.org" target="__blank">validate.js</a> library.
+	<h3>Inputs</h3>
+	<dl class="message-properties">
+        <dt>msg <span class="property-type">object</span></dt>
+        <dd>A msg object containing information to populate the template. The target property can be set within de node</dd>
+        <dt class="optional">template <span class="property-type">object</span></dt>
+        <dd>The validator object can be passed as a <code>msg.template</code> property if the editor is empty.</dd>
+	</dl>
+	
+	<h3>Outputs</h3>
+	<dl class="message-properties">
+        <dt>First output <span class="property-type">object</span></dt>
+		<dd>The msg object will be send as is if the validation is ok.</dd>
+		<dt>Second output <span class="property-type">object</span></dt>
+        <dd>Otherwise, the second output will send a Validate.js error message.</dd>
+	</dl>
+	
+	<h3>Example validator</h3>
+	<pre>"name": {
+  "presence": true
+},
+"password": {
+  "length": {
+    "minimun": 5,
+    "message": "^The password must be at least 5 characters long."
+  }
+},
+"email": {
+  "email": {
+    "message": "^The email is invalid."
+  }
+}</pre>
+</script>

@@ -1,0 +1,10 @@
+{
+	"validate": {
+		"label": {
+			"title": "validate",
+			"name": "Name",
+			"property": "Property",
+			"template": "Constraints"
+		}
+	}
+}
