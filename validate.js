@@ -1,4 +1,15 @@
 var validate = require("validate.js");
+var DateTime = require('luxon').DateTime;
+
+validate.extend(validate.validators.datetime, {
+    parse: function(value, options) {
+        return +DateTime.fromISO(value).toMillis();
+    },
+    format: function(value, options) {
+        var format = options.dateOnly ? "yyyy-MM-dd" : "yyyy-MM-dd hh:mm";
+        return DateTime.fromMillis(value).toFormat(format);
+    }
+});
 
 module.exports = function(RED) {
 	"use strict";
