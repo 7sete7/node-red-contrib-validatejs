@@ -40,35 +40,48 @@ module.exports = function(RED) {
 		this.template = config.validate;
 		this.fieldType = config.fieldType || "msg";
 
-		node.on("input", function(msg) {
+		node.on("input", function(msg, send, done) {
 			node.status({});
+
+      // Backwards compatibility
+      done = done || node.done || function(){};
+      send = send || node.send;
+
+      console.log(msg);
 
 			try {
 				// Use msg.template property if template editor is empty
 				if (msg.hasOwnProperty("template")) {
-					if (this.template == "" || this.template === null) {
+					if (this.template == null || this.template.length === 0) {
 						this.template = msg.template;
 					}
 				}
+        
+        if ("string" === typeof this.template) {
+          this.template = JSON.parse(this.template);
+        }
 
 				const data = RED.util.evaluateNodeProperty(this.field, this.fieldType, this, msg);
-				const constraints = JSON.parse(this.template);
 
-				const result = validate(data, constraints, { format: "grouped" });
+				const result = validate(data, this.template, { format: "grouped" });
 				if (Object.keys(result || {}).length > 0) {
-					node.send([null, { ...msg, payload: result }]);
+					send([null, { ...msg, payload: result }]);
 					return;
 				}
 
-				node.send([msg, null]);
+				send([msg, null]);
+        done();
 			} catch (e) {
-				node.error(e);
+				node.error(e, msg);
 				node.status({
 					fill: "red",
 					shape: "ring",
 					text: "Error in validation"
 				});
-				node.send([null, e]);
+
+        msg.payload = e;
+				send([null, msg]);
+        done();
 			}
 		});
 	}
