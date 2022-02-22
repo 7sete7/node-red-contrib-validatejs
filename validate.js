@@ -47,8 +47,6 @@ module.exports = function(RED) {
       done = done || node.done || function(){};
       send = send || node.send;
 
-      console.log(msg);
-
 			try {
 				// Use msg.template property if template editor is empty
 				if (msg.hasOwnProperty("template")) {
